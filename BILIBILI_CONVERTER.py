@@ -27,16 +27,22 @@ if __name__ == "__main__":
     # 遍历文件夹，并且在目标目录生成新的目录
     tar_dir = r"C:\Users\alan\Downloads\JavaVideo"
 
+    count = 0
     # b站下载的视频目录结构层一般是 av号/序号/lua/视频文件 av号/序号/entry.json   
     for dir in os.listdir(src_dir):
         json_dir = os.path.join(src_dir, dir, "entry.json")
         json_file = json.load(open(json_dir, "r", encoding="utf8"))      
         title_dir = os.path.join(tar_dir, json_file["title"])
+        # print(title_dir)
+        title_dir = title_dir.replace("/", "、")
+        title_dir = title_dir.replace("|", " ")
+        # print(new)
         if not os.path.exists(title_dir):
             os.mkdir(title_dir)
 
         # 转换成 flv 格式
         file_name = json_file['page_data']['part'] + ".flv"
+        file_name = file_name.replace("/", "、")
         src_video_path = ""
         
         # tar_video_path = ""
@@ -51,3 +57,9 @@ if __name__ == "__main__":
             print(src_video_path + " 开始转换 ！")
             open(tar_video_path, "wb").write(open(src_video_path, "rb").read())
         print(tar_video_path + " 转换完成 ！")
+        count += 1
+    print("全部转换完成， 共 %d"%(count) + " 个视频文件！ ")
+
+    # ---- 检测转换效果，如果转换成功，则删除原始文件
+    # 主要通过判断文件数目和文件大小进行实现
+
